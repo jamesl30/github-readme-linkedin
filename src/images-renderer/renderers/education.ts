@@ -33,8 +33,9 @@ export default class Education {
       </text>
     `;
     const sortedList = _.reverse(_.sortBy(education, o => _.get(o, ['dateRange', 'end', 'year'])));
+    const limitNum = limit ? Number(limit) : null;
     sortedList.forEach((educationItem: EducationItem, index: number) => {
-      if (!limit || (limit && index < limit)) {
+      if (!limitNum || (limitNum && index < limitNum)) {
         list = `
           ${list}
           <text x="10" y="${index === 0 ? 40 : ((80 * index) + 40)}">

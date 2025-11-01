@@ -11,11 +11,11 @@ interface User {
 export default class UserInfo {
   public info = '';
 
-  constructor(user: User[]) {
+  constructor(user: User) {
     this.info = this.renderList(user);
   }
 
-  renderList(user: User[]): string {
+  renderList(user: User): string {
     return `
       <text x="10" y="0">
         <tspan x="0" dy="25" font-size="32" font-weight="bold" fill="#000" fill-opacity=".9">${parseString(`${_.get(user, 'firstName')} ${_.get(user, 'lastName')}`)}</tspan>

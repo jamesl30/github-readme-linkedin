@@ -33,8 +33,9 @@ export default class Experience {
       </text>
     `;
     const sortedList = _.reverse(_.sortBy(experience, o => _.get(o, ['dateRange', 'end', 'year'])));
+    const limitNum = limit ? Number(limit) : null;
     sortedList.forEach((position: ExperienceItem, index: number) => {
-      if (!limit || (limit && index < limit)) {
+      if (!limitNum || (limitNum && index < limitNum)) {
         list = `
           ${list}
           <text x="10" y="${index === 0 ? 40 : ((105 * index) + 40)}">

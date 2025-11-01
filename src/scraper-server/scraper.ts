@@ -1,27 +1,21 @@
 // Forked from https://github.com/Cooya/Linkedin-Client
 
-const cheerio = require('cheerio');
-const fs = require('fs');
-const request = require('request-promise');
-const Entities = require('html-entities').XmlEntities;
-const dotenv = require('dotenv');
+import * as cheerio from 'cheerio';
+import * as fs from 'fs';
+import axios from 'axios';
+import { decode } from 'html-entities';
+import * as dotenv from 'dotenv';
 
 const debugFile: string = '../assets/debug.json';
-
-const entities: any = new Entities();
-const jar: any = buildCookiesJar();
+dotenv.config();
 const industries: any = {};
 const followingItems: any = {};
 
-function buildCookiesJar() {
-  dotenv.config();
+function getCookieHeader() {
   if (!process.env.LINKEDIN_TOKEN) {
     throw new Error('The Linkedin cookie is required.');
   }
-
-  const jar = request.jar();
-  jar.setCookie(request.cookie(`li_at=${process.env.LINKEDIN_TOKEN}`), 'https://www.linkedin.com');
-  return jar;
+  return `li_at=${process.env.LINKEDIN_TOKEN}`;
 }
 
 function processPeopleProfile(item: any, result: any) {
@@ -135,7 +129,13 @@ export default async (url: string) => {
     fs.writeFileSync(debugFile, '');
   }
 
-  const html = await request({ url, jar });
+  const response = await axios.get(url, {
+    headers: {
+      'Cookie': getCookieHeader(),
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+  });
+  const html = response.data;
   const $ = cheerio.load(html);
   let data: any, result: any = { linkedinUrl: url.replace('/about/', '') };
   while (!result.name && !result.firstName) {
@@ -143,7 +143,7 @@ export default async (url: string) => {
     for (let elt of $('code')
       .get()) {
       try {
-        data = JSON.parse(entities.decode($(elt).html()));
+        data = JSON.parse(decode($(elt).html()));
       } catch (e) {
         continue;
       }

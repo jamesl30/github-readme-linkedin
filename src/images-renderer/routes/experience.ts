@@ -1,9 +1,9 @@
-import { NowRequest, NowResponse } from '@vercel/node';
+import { Request, Response } from 'express';
 import _ from 'lodash';
 import API from '../helpers/api';
 import ExperienceRenderer from '../renderers/experience';
 
-export default async (req: NowRequest, res: NowResponse) => {
+export default async (req: Request, res: Response) => {
   res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
   res.setHeader('Expires', '-1');
   res.setHeader('Pragma', 'no-cache');

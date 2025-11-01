@@ -21,8 +21,9 @@ export default class Languages {
         <tspan x="0" dy="20" font-size="26" font-weight="bold">Languages</tspan>
       </text>
     `;
+    const limitNum = limit ? Number(limit) : null;
     _.reverse(languages).forEach((languageItem: LanguageItem, index: number) => {
-        if (!limit || (limit && index < limit)) {
+        if (!limitNum || (limitNum && index < limitNum)) {
           list = `
             ${list}
             <text x="10" y="${index === 0 ? 40 : ((30 * index) + 40)}">

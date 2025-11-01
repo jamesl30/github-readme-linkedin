@@ -1,4 +1,4 @@
-import request from 'request';
+import axios from 'axios';
 import _ from 'lodash';
 
 class API {
@@ -9,28 +9,21 @@ class API {
   constructor() {
   }
 
-  getProfileData(username: string): Promise<any> {
-    return new Promise((resolve, reject) => {
+  async getProfileData(username: string): Promise<any> {
+    try {
       const URL = `${this.protocol}://${this.baseURL}/${this.root}?username=${username}`;
-      request.get(
-        URL,
-        {
-          headers: this.getHeaders(),
-        },
-        (error, response, body) => {
-          if (body) {
-            const data = JSON.parse(body);
-            if (_.get(data, 'result')) {
-              resolve(_.get(data, 'result'));
-            } else {
-              reject();
-            }
-          } else {
-            reject();
-          }
-        },
-      );
-    });
+      const response = await axios.get(URL, {
+        headers: this.getHeaders(),
+      });
+
+      if (response.data && _.get(response.data, 'result')) {
+        return _.get(response.data, 'result');
+      } else {
+        throw new Error('No result in response');
+      }
+    } catch (error) {
+      throw error;
+    }
   }
 
   private getHeaders() {
