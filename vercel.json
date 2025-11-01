@@ -7,5 +7,10 @@
     { "source": "/languages", "destination": "/api/languages" },
     { "source": "/skills", "destination": "/api/skills" },
     { "source": "/user", "destination": "/api/user" }
-  ]
+  ],
+  "functions": {
+    "api/*.ts": {
+      "includeFiles": "src/**"
+    }
+  }
 }
