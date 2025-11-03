@@ -9,7 +9,8 @@ export default async (req: Request, res: Response) => {
   res.setHeader('Pragma', 'no-cache');
   res.setHeader('Content-Type', 'image/svg+xml');
   if (_.get(req, ['query', 'username'])) {
-    const limit = _.get(req, ['query', 'limit'], null);
+    const limitParam = _.get(req, ['query', 'limit'], null);
+    const limit = limitParam && typeof limitParam === 'string' ? parseInt(limitParam, 10) : null;
     let profileData = null;
     try {
       profileData = await API.getProfileData((_.get(req, ['query', 'username']) as string));
@@ -17,8 +18,7 @@ export default async (req: Request, res: Response) => {
       profileData = null;
     }
     if (profileData) {
-      console.log(profileData);
-      const skills = new SkillsRenderer(_.get(profileData, ['skills']), (limit as number));
+      const skills = new SkillsRenderer(_.get(profileData, ['skills']), limit);
       const image = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" width="100%" height="100%">
         <style>
           * {

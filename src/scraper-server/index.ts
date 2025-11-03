@@ -12,7 +12,8 @@ export default async (req: Request, res: Response) => {
         res.json({ error: null, result });
       }
     } catch (e) {
-      res.json({ error: e.message, result: null });
+      const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred';
+      res.json({ error: errorMessage, result: null });
     }
   } else {
     res.json({ error: 'A LinkedIn username is required.' });
