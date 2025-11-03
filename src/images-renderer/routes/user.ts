@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import _ from 'lodash';
-import API from '../helpers/api';
+import scraper from '../../scraper-server/scraper';
 import UserRenderer from '../renderers/user';
 
 export default async (req: Request, res: Response) => {
@@ -11,7 +11,8 @@ export default async (req: Request, res: Response) => {
   if (_.get(req, ['query', 'username'])) {
     let profileData = null;
     try {
-      profileData = await API.getProfileData((_.get(req, ['query', 'username']) as string));
+      const username = _.get(req, ['query', 'username']) as string;
+      profileData = await scraper(`https://www.linkedin.com/in/${username}`);
     } catch (e) {
       profileData = null;
     }
